@@ -22,6 +22,7 @@ export class DockerComposeEnvironment {
   private readonly composeFiles: string | string[];
 
   private projectName: string;
+  private customProjectName = false;
   private build = false;
   private autoCleanup = true;
   private recreate = true;
@@ -67,7 +68,9 @@ export class DockerComposeEnvironment {
 
   public withNoRecreate(): this {
     this.recreate = false;
-    this.projectName = "testcontainers-node";
+    if (!this.customProjectName) {
+      this.projectName = "testcontainers-node";
+    }
     return this;
   }
 
@@ -93,6 +96,7 @@ export class DockerComposeEnvironment {
 
   public withProjectName(projectName: string): this {
     this.projectName = projectName;
+    this.customProjectName = true;
     return this;
   }
 

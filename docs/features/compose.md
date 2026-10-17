@@ -127,6 +127,8 @@ const environment = await new DockerComposeEnvironment(composeFilePath, composeF
 
 ### With no recreate
 
+Unless you set one with `withProjectName`, the project name is fixed to `testcontainers-node`, so environments using `withNoRecreate()` share one Compose project.
+
 ```js
 const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
   .withNoRecreate()

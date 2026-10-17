@@ -267,6 +267,24 @@ describe("DockerComposeEnvironment", { timeout: 180_000 }, () => {
       .up();
   });
 
+  it.each([true, false])(
+    "should keep the custom project name when no recreate is set (project name first: %s)",
+    async (projectNameFirst) => {
+      const projectName = `custom-project-${randomUuid()}`;
+      const environment = new DockerComposeEnvironment(fixtures, "docker-compose.yml");
+      if (projectNameFirst) {
+        environment.withProjectName(projectName).withNoRecreate();
+      } else {
+        environment.withNoRecreate().withProjectName(projectName);
+      }
+
+      await using startedEnvironment = await environment.up();
+
+      const container = startedEnvironment.getContainer("container-1");
+      expect(container.getLabels()["com.docker.compose.project"]).toBe(projectName);
+    }
+  );
+
   it("should load .env if no environment file option given", async () => {
     const overrideFixtures = path.resolve(fixtures, "docker-compose-with-env-file");
 
