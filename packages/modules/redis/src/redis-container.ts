@@ -49,9 +49,6 @@ export class RedisContainer extends GenericContainer {
       // merge with filter to remove empty items
       const mergedRedisArgs = [existingRedisArgs, ...redisArgs].filter(Boolean).join(" ");
 
-      // remove existing REDIS_ARGS to avoid duplicates
-      this.createOpts.Env = (this.createOpts.Env || []).filter((e) => !e.startsWith("REDIS_ARGS="));
-
       this.withEnvironment({
         REDIS_ARGS: mergedRedisArgs,
       }).withEntrypoint(["/entrypoint.sh"]);

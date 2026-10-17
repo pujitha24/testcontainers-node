@@ -163,6 +163,19 @@ describe("GenericContainer", { timeout: 180_000 }, () => {
     expect(responseBody.customKey).toBe("customValue");
   });
 
+  it("should replace the existing entry when an environment variable is set twice", () => {
+    class TestContainer extends GenericContainer {
+      public getEnv() {
+        return this.createOpts.Env;
+      }
+    }
+    const container = new TestContainer("cristianrgreco/testcontainer:1.1.14")
+      .withEnvironment({ one: "1", two: "1" })
+      .withEnvironment({ two: "2" });
+
+    expect(container.getEnv()).toEqual(["one=1", "two=2"]);
+  });
+
   it("should set command", async () => {
     await using container = await new GenericContainer("cristianrgreco/testcontainer:1.1.14")
       .withCommand(["node", "index.js", "one", "two", "three"])
